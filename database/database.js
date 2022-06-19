@@ -30,5 +30,18 @@ export default await (async () => {
     )`;
     await db.run(createTokensTable);
 
+    const createComicsTable = `CREATE TABLE IF NOT EXISTS comics (
+        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        title VARCHAR NOT NULL,
+        description VARCHAR NOT NULL,
+        series VARCHAR,
+        drawer VARCHAR NOT NULL,
+        publisher VARCHAR NOT NULL,
+        release_date DATE,
+        category VARCHAR NOT NULL,
+        added_date DATE DEFAULT CURRENT_DATE
+    )`;
+    await db.run(createComicsTable);
+
 	return db;
 })();

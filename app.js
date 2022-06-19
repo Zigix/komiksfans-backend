@@ -1,6 +1,7 @@
 ``
 import express from "express";
 import AuthService from "./service/AuthService.js";
+import ComicService from "./service/ComicService.js";
 import PermissionService from "./service/PermissionService.js";
 import UserService from "./service/UserService.js";
 
@@ -68,16 +69,29 @@ app.patch("/api/admin/users/:id/upgrade-permission", async (req, res) => {
 });
 
 
+/*
+* Comics
+*
+*/
 
+app.post("/api/comics", async (req, res) => {
+    await ComicService.createComic(req.body);
+    res.status(201).end();
+});
 
+app.get("/api/comics", async (req, res) => {
+    const comics = await ComicService.getAllComics();
+    res.status(200).json(comics).end();
+});
 
-
-
-// app.get("/api/users/:username", async (req, res) => {
-//     const user = await UserRepository.getUserByUsername(req.params.username);
-//     console.log(user);
-//     res.json(user).end();
-// });
+app.get("/api/comics/:id", async (req, res) => {
+    try {
+        const comic = await ComicService.getComicById(req.params.id);
+        res.status(200).json(comic).end();
+    } catch (e) {
+        res.status(400).json(e).end();
+    }
+});
 
 
 app.listen(3000, () => "Listening");
