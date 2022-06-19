@@ -12,8 +12,8 @@ export default class UserRepository {
         return await db.get(query);
     };
 
-    static async getUserById(id) {
-        const query = `SELECT * FROM users WHERE username='${id}'`;
+    static async getUserById(userId) {
+        const query = `SELECT * FROM users WHERE id='${userId}'`;
         return await db.get(query);
     };
 
@@ -48,8 +48,23 @@ export default class UserRepository {
         return false;
     }
 
-    static async deleteUser(id) {
-        const query = `DELETE FROM users WHERE id='${id}'`;
+    static async deleteUser(userId) {
+        const query = `DELETE FROM users WHERE id='${userId}'`;
+        await db.run(query);
+    }
+
+    static async blockUser(userId) {
+        const query = `UPDATE users SET is_blocked=1 WHERE id='${userId}'`;
+        await db.run(query);
+    }
+
+    static async unblockUser(userId) {
+        const query = `UPDATE users SET is_blocked=0 WHERE id='${userId}'`;
+        await db.run(query);
+    }
+
+    static async upgradePermission(userId) {
+        const query = `UPDATE users SET role='admin' WHERE id='${userId}'`;
         await db.run(query);
     }
 }

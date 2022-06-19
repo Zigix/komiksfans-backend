@@ -1,7 +1,8 @@
 ``
 import express from "express";
 import AuthService from "./service/AuthService.js";
-import RoleService from "./service/RoleService.js";
+import PermissionService from "./service/PermissionService.js";
+import UserService from "./service/UserService.js";
 
 const app = express();
 app.use(express.json());
@@ -27,24 +28,50 @@ app.post("/api/auth/login", async (req, res) => {
 
 app.get("/api/auth/logout", async (req, res) => {
     try {
-        console.log(req.headers);
         await AuthService.logout(req);
         res.status(200).end();
     } catch (e) {
         res.status(400).json(e).end();
     }
-}) 
+}) ;
 
 app.get("/api/admin/users", async (req, res) => {
-    try {
-        if (!await RoleService.hasRoleAdmin(req)) {
-            res.status(403).end();
-        }
+    const users = await UserService.getAllUsers();
+    res.status(200).json(users).end();
+});
 
+app.patch("/api/admin/users/:id/toggleBlock", async (req, res) => {
+    try {
+        await UserService.toggleBlock(req.params.id);
+        res.status(200).end();
     } catch (e) {
-        // res.status(403).json(e).end();
+        res.status(400).json(e).end();
     }
 });
+
+app.delete("/api/admin/users/:id", async (req, res) => {
+    try {
+        await UserService.deleteUser(req.params.id);
+        res.status(200).end();
+    } catch (e) {
+        res.status(400).json(e).end();
+    }
+});
+
+app.patch("/api/admin/users/:id/upgrade-permission", async (req, res) => {
+    try {
+        await UserService.upgradePermission(req.params.id);
+        res.status(200).end();
+    } catch (e) {
+        res.status(400).json(e).end();
+    }
+});
+
+
+
+
+
+
 
 // app.get("/api/users/:username", async (req, res) => {
 //     const user = await UserRepository.getUserByUsername(req.params.username);

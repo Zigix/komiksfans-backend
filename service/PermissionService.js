@@ -1,7 +1,7 @@
 import TokenRepository from "../repository/TokenRepository.js";
 import UserRepository from "../repository/UserRepository.js";
 
-export default class RoleService {
+export default class PermissionService {
 
     static getAccessTokenFromRequest(req) {
         const token = req.headers.accesstoken;

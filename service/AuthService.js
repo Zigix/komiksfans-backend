@@ -1,6 +1,6 @@
 import TokenRepository from "../repository/TokenRepository.js";
 import UserRepository from "../repository/UserRepository.js";
-import RoleService from "./RoleService.js";
+import PermissionService from "./PermissionService.js";
 import TokenService from "./TokenService.js";
 
 export default class AuthService {
@@ -39,7 +39,7 @@ export default class AuthService {
     }
 
     static async logout(req) {
-        const token = RoleService.getAccessTokenFromRequest(req);
+        const token = PermissionService.getAccessTokenFromRequest(req);
         await TokenRepository.deleteToken(token);
     }
 }
