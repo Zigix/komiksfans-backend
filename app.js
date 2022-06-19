@@ -2,10 +2,11 @@
 import express from "express";
 import AuthService from "./service/AuthService.js";
 import ComicService from "./service/ComicService.js";
-import PermissionService from "./service/PermissionService.js";
 import UserService from "./service/UserService.js";
+import cors from "cors";
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 
