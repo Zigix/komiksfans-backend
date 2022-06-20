@@ -18,4 +18,21 @@ export default class ComicService {
 
         return comic;
     }
+
+    static async searchComics(searchQuery) {
+        const key = Object.keys(searchQuery)[0];
+        const value = Object.values(searchQuery)[0];
+        return await ComicRepository.searchComics(key, value);
+    }
+
+    static async modifyComic(comicId, searchQuery) {
+        const comic = await ComicRepository.getComicById(comicId);
+        if (comic === undefined) {
+            throw { error: `Comic with id ${comicId} not found` };
+        }
+        const key = Object.keys(searchQuery)[0];
+        const value = Object.values(searchQuery)[0];
+
+        await ComicRepository.modifyComic(comicId, key, value);
+    }
 }
