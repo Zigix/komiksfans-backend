@@ -4,6 +4,7 @@ import AuthService from "./service/AuthService.js";
 import ComicService from "./service/ComicService.js";
 import UserService from "./service/UserService.js";
 import cors from "cors";
+import PermissionService from "./service/PermissionService.js";
 
 const app = express();
 app.use(cors());
@@ -35,17 +36,31 @@ app.get("/api/auth/logout", async (req, res) => {
     } catch (e) {
         res.status(400).json(e).end();
     }
-}) ;
+});
 
 app.get("/api/admin/users", async (req, res) => {
-    const users = await UserService.getAllUsers();
-    res.status(200).json(users).end();
+    try {
+        const accessToken = PermissionService.getAccessTokenFromRequest(req);
+        if (await PermissionService.hasRoleAdmin(accessToken)) {
+            const users = await UserService.getAllUsers();
+            res.status(200).json(users).end();
+        } else {
+            res.status(403).json({ error: "No permission" });
+        }
+    } catch (e) {
+        res.status(400).json(e).end();
+    }
 });
 
 app.patch("/api/admin/users/:id/toggleBlock", async (req, res) => {
     try {
-        await UserService.toggleBlock(req.params.id);
-        res.status(200).end();
+        const accessToken = PermissionService.getAccessTokenFromRequest(req);
+        if (await PermissionService.hasRoleAdmin(accessToken)) {
+            await UserService.toggleBlock(req.params.id);
+            res.status(200).end();
+        } else {
+            res.status(403).json({ error: "No permission" });
+        }
     } catch (e) {
         res.status(400).json(e).end();
     }
@@ -53,8 +68,13 @@ app.patch("/api/admin/users/:id/toggleBlock", async (req, res) => {
 
 app.delete("/api/admin/users/:id", async (req, res) => {
     try {
-        await UserService.deleteUser(req.params.id);
-        res.status(200).end();
+        const accessToken = PermissionService.getAccessTokenFromRequest(req);
+        if (await PermissionService.hasRoleAdmin(accessToken)) {
+            await UserService.deleteUser(req.params.id);
+            res.status(200).end();
+        } else {
+            res.status(403).json({ error: "No permission" });
+        }
     } catch (e) {
         res.status(400).json(e).end();
     }
@@ -62,8 +82,13 @@ app.delete("/api/admin/users/:id", async (req, res) => {
 
 app.patch("/api/admin/users/:id/upgrade-permission", async (req, res) => {
     try {
-        await UserService.upgradePermission(req.params.id);
-        res.status(200).end();
+        const accessToken = PermissionService.getAccessTokenFromRequest(req);
+        if (await PermissionService.hasRoleAdmin(accessToken)) {
+            await UserService.upgradePermission(req.params.id);
+            res.status(200).end();
+        } else {
+            res.status(403).json({ error: "No permission" });
+        }
     } catch (e) {
         res.status(400).json(e).end();
     }
@@ -93,6 +118,35 @@ app.get("/api/comics/:id", async (req, res) => {
         res.status(400).json(e).end();
     }
 });
+
+app.patch("/api/comics/:id/toggleFavorite", async (req, res) => {
+
+        const accessToken = PermissionService.getAccessTokenFromRequest(req);
+        if (await PermissionService.hasRoleUser(accessToken)) {
+            const user = await PermissionService.getLoggedUser(accessToken);
+            console.log(user.id);
+            await UserService.toggleFavorite(user.id, req.params.id);
+            res.status(200).end();
+        } else {
+            res.status(403).json({ error: "No permission" });
+        }
+    
+});
+
+app.get("/api/comics/favorite/get", async (req, res) => {
+    try {
+        const accessToken = PermissionService.getAccessTokenFromRequest(req);
+        if (await PermissionService.hasRoleUser(accessToken)) {
+            const user = await PermissionService.getLoggedUser(accessToken);
+            const favoriteComics = await UserService.getFavorite(user.id);
+            res.status(200).json(favoriteComics).end();
+        } else {
+            res.status(403).json({ error: "No permission" });
+        }
+    } catch (e) {
+        res.status(400).json(e).end();
+    }
+})
 
 
 app.listen(3000, () => "Listening");

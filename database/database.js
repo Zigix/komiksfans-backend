@@ -43,5 +43,13 @@ export default await (async () => {
     )`;
     await db.run(createComicsTable);
 
+    const createFavoriteComicsTable = `CREATE TABLE IF NOT EXISTS users_comics (
+        user_id INTEGER NOT NULL,
+        comic_id INTEGER NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (comic_id) REFERENCES comics(id)
+    )`;
+    await db.run(createFavoriteComicsTable);
+
 	return db;
 })();

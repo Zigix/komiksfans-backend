@@ -18,4 +18,9 @@ export default class ComicRepository {
         const query = `SELECT * FROM comics WHERE id='${comicId}'`;
         return await db.get(query);
     }
+
+    static async deleteComic(comicId) {
+        const query = `DELETE FROM comics WHERE id='${comicId}'`;
+        await db.run(query);
+    }
 }

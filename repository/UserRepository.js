@@ -67,4 +67,31 @@ export default class UserRepository {
         const query = `UPDATE users SET role='admin' WHERE id='${userId}'`;
         await db.run(query);
     }
+
+    static async existsByFavorite(userId, comicId) {
+        const query = `SELECT EXISTS(SELECT 1 FROM users_comics WHERE user_id='${userId}' AND comic_id='${comicId}')`;
+        const result = await db.get(query);
+        const exists = Object.values(result);
+        if (exists[0] === 1) {
+            return true;
+        }
+        return false;
+    }
+
+    static async addToFavorite(userId, comicId) {
+        const query = `INSERT INTO users_comics(user_id, comic_id) VALUES ('${userId}', '${comicId}')`;
+        await db.run(query);
+    }
+
+    static async removeFromFavorite(userId, comicId) {
+        const query = `DELETE FROM users_comics WHERE user_id='${userId}' AND comic_id='${comicId}'`;
+        await db.run(query);
+    }
+
+    static async getFavorite(userId) {
+        const query = `SELECT c.* FROM comics c LEFT JOIN users_comics uc ON c.id=uc.comic_id WHERE uc.user_id='${userId}'`;
+        const result = await db.all(query);
+        console.log(result);
+        return result;
+    }
 }

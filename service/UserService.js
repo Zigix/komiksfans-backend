@@ -1,4 +1,5 @@
 import UserRepository from "../repository/UserRepository.js";
+import ComicService from "./ComicService.js";
 
 export default class UserService {
     static async getAllUsers() {
@@ -49,5 +50,18 @@ export default class UserService {
         await UserRepository.upgradePermission(userId);
     }
 
-    
+    static async toggleFavorite(userId, comicId) {
+        console.log(userId + comicId);
+        const exists = await UserRepository.existsByFavorite(userId, comicId);
+        console.log(exists);
+        if (exists) {
+            await UserRepository.removeFromFavorite(userId, comicId);
+            return;
+        }
+        await UserRepository.addToFavorite(userId, comicId);
+    }
+
+    static async getFavorite(userId) {
+        return await UserRepository.getFavorite(userId);
+    }
 }

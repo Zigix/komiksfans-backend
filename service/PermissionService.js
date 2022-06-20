@@ -11,14 +11,23 @@ export default class PermissionService {
         return token;
     }
 
-    static async hasRoleAdmin(req) {
-        const token = this.getAccessTokenFromRequest(req);
-        console.log(token);
-        const userId = await TokenRepository.getUserIdByToken(token);
-        console.log(userId);
-        const user = await UserRepository.getUserById(userId);
-        console.log(user);
+    static async getLoggedUser(accessToken) {
+        const userId = await TokenRepository.getUserIdByToken(accessToken);
+        const user = await UserRepository.getUserById(userId.user_id);
+        return user;
+    }
+
+    static async hasRoleAdmin(accessToken) {
+        const userId = await TokenRepository.getUserIdByToken(accessToken);
+        const user = await UserRepository.getUserById(userId.user_id);
         if (user.role === "admin") return true;
+        return false;
+    }
+
+    static async hasRoleUser(accessToken) {
+        const userId = await TokenRepository.getUserIdByToken(accessToken);
+        const user = await UserRepository.getUserById(userId.user_id);
+        if (user.role === "user") return true;
         return false;
     }
 }
