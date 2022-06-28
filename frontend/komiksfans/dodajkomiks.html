@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+
+    <a href="index.html"> <img class="logo"src="img/logo.png">
+    <nav>
+        <ul class="nav_links">
+            <li><a href="uzytkownicy.html">Zarzadzaj użytkownikami</a></li>
+            <li><a href="komiksy.html">Zarządzaj komiksami</a></li>
+            <li><a href="#"><img src="img/profile.svg"></a></li>
+            <li><a href="#"><img src="img/logout.svg"></a></li>
+        </ul>
+    </nav>
+
+
+</header>
+<div class="addcomics">
+
+<h3>Dodaj nowy komiks</h3>
+
+<form class= "dane">
+  <label for="title">Tytuł:</label><br>
+  <input type="text" class="okno" id="title" name="title"><br>
+
+  <label for="desc">Opis:</label><br>
+  <textarea class="okno"  id="desc" name="desc" placeholder="Wpisz opis" style="height:200px; max-width:300px"></textarea><br>
+
+  <label for="cat">Kategoria:</label><br>
+  <select class="okno" id="cat" name="cat">
+    <option value="kategoria1">glupie</option>
+    <option value="kategoria2">polithecnika</option>
+    <option value="kategoria3">a kto pytal?</option>
+  </select><br>
+
+  <label for="publisher">Wydawca:</label><br>
+  <select class="okno" id="publisher" name="publisher">
+  <option value="wydawca1">policjant</option>
+  <option value="wydawca2">komisarz</option>
+  <option value="wydawca3">sierzant</option>
+  </select><br>
+
+  <label for="series">Seria:</label><br>
+  <select class="okno"   id="series" name="series">
+    <option value="seria1">szybcy i wsciekli</option>
+    <option value="seria2">pszczolka maja</option>
+    <option value="seria3">kanapka</option>
+  </select><br>
+
+  <label for="author">Rysownik:</label><br>
+  <select class="okno"  id="author" name="author">
+    <option value="rysownik1">papiez</option>
+    <option value="rysownik2">polak</option>
+    <option value="rysownik3">wielki czlowiek</option>
+  </select><br>
+
+  <label for="author">Wybierz okładkę:</label><br><br>
+  <input type="file" id="cover" name="cover"><br><br><br>
+
+  <input type="submit" value="Dodaj" class="przycisk">
+</form>
+
+</div>
+    
+</body>
+</html>
